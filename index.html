@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meeting Time Tracker</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- React and ReactDOM from CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -17,9 +21,23 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: #f5f5f5;
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .meeting-setup {
@@ -32,13 +50,15 @@
         }
 
         .setup-container {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             padding: 3rem;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             text-align: center;
             max-width: 400px;
             width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .setup-title {
@@ -91,16 +111,22 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: background-color 1s ease;
+            transition: all 1s ease;
             padding: 2rem;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
         }
 
         .timer-display {
-            font-size: 8rem;
-            font-weight: bold;
+            font-size: 28vw;
+            font-weight: 600;
             color: white;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            text-shadow: 4px 4px 16px rgba(0, 0, 0, 0.5);
             margin-bottom: 2rem;
+            line-height: 0.9;
+            text-align: center;
+            font-family: 'Fredoka', sans-serif;
         }
 
         .extend-button {
@@ -113,11 +139,34 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-bottom: 2rem;
         }
 
         .extend-button:hover {
             background: rgba(255, 255, 255, 0.3);
+        }
+
+        .end-button {
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: 2px solid white;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .end-button:hover {
+            background: rgba(255, 0, 0, 1);
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .reminder-message {
@@ -142,18 +191,36 @@
 
         @media (max-width: 768px) {
             .timer-display {
-                font-size: 4rem;
+                font-size: 35vw;
+                margin-bottom: 1.5rem;
             }
             
             .setup-container {
                 padding: 2rem;
                 margin: 1rem;
             }
+
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .end-button,
+            .extend-button {
+                width: 200px;
+            }
         }
 
         @media (max-width: 480px) {
             .timer-display {
-                font-size: 3rem;
+                font-size: 40vw;
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .timer-display {
+                font-size: 25vw;
             }
         }
     </style>
@@ -168,10 +235,48 @@
             const [timeRemaining, setTimeRemaining] = React.useState(0);
             const [showReminder, setShowReminder] = React.useState(false);
             const intervalRef = React.useRef(null);
+            const lastTingTimeRef = React.useRef(null);
+            const audioContextRef = React.useRef(null);
+
+            const createTingSound = () => {
+                try {
+                    if (!audioContextRef.current) {
+                        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                    
+                    const audioContext = audioContextRef.current;
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    // Create a gentle bell-like sound
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.3);
+                    
+                    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.8);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.8);
+                } catch (error) {
+                    console.log('Audio not supported or blocked by browser');
+                }
+            };
 
             const startMeeting = () => {
-                setTimeRemaining(duration * 60);
+                const totalSeconds = duration * 60;
+                setTimeRemaining(totalSeconds);
                 setIsInMeeting(true);
+                lastTingTimeRef.current = totalSeconds;
+            };
+
+            const endMeeting = () => {
+                setIsInMeeting(false);
+                setShowReminder(false);
+                setTimeRemaining(0);
             };
 
             const extendTime = () => {
@@ -185,24 +290,25 @@
                 return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
             };
 
-            const getBackgroundColor = () => {
+            const getBackgroundOverlay = () => {
                 const totalSeconds = duration * 60;
                 
                 // Calculate progress from 0 to 1 based on time remaining
-                // 0 = no time left (red), 1 = full time remaining (green)
                 const progress = timeRemaining / totalSeconds;
                 
-                // Start from green (120 degrees) and transition to red (0 degrees)
-                // Green = 120°, Yellow = 60°, Orange = 30°, Red = 0°
-                const hue = 120 * progress; // Goes from 0 to 120 (red to green)
+                // Create a subtle overlay that gets more intense as time runs out
+                const intensity = (1 - progress) * 0.3; // Max 30% overlay
                 
-                // High saturation for vibrant colors
-                const saturation = 75;
-                
-                // Gradually decrease lightness as time runs out for more urgency
-                const lightness = Math.max(30 + (progress * 20), 30);
-                
-                return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+                if (progress > 0.5) {
+                    // Green overlay for first half
+                    return `rgba(34, 197, 94, ${intensity})`;
+                } else if (progress > 0.2) {
+                    // Yellow overlay for middle portion
+                    return `rgba(234, 179, 8, ${intensity})`;
+                } else {
+                    // Red overlay for final portion
+                    return `rgba(239, 68, 68, ${intensity})`;
+                }
             };
 
             React.useEffect(() => {
@@ -213,6 +319,12 @@
                                 setIsInMeeting(false);
                                 setShowReminder(false);
                                 return 0;
+                            }
+                            
+                            // Check if 5 minutes have passed since last ting
+                            if (lastTingTimeRef.current - prev >= 300) { // 300 seconds = 5 minutes
+                                createTingSound();
+                                lastTingTimeRef.current = prev;
                             }
                             
                             // Calculate 90% threshold dynamically
@@ -264,23 +376,42 @@
             return (
                 <div 
                     className={`timer-screen ${timeRemaining <= (duration * 60 * 0.1) ? 'blinking' : ''}`}
-                    style={{
-                        backgroundColor: getBackgroundColor()
-                    }}
                 >
-                    <div className="timer-display">
+                    <div 
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: getBackgroundOverlay(),
+                            zIndex: 1,
+                            pointerEvents: 'none'
+                        }}
+                    ></div>
+                    
+                    <div className="timer-display" style={{ zIndex: 2, position: 'relative' }}>
                         {formatTime(timeRemaining)}
                     </div>
                     
-                    <button 
-                        className="extend-button"
-                        onClick={extendTime}
-                    >
-                        Extend by 5 Minutes
-                    </button>
+                    <div className="button-container" style={{ zIndex: 2, position: 'relative' }}>
+                        <button 
+                            className="extend-button"
+                            onClick={extendTime}
+                        >
+                            Extend by 5 Minutes
+                        </button>
+                        
+                        <button 
+                            className="end-button"
+                            onClick={endMeeting}
+                        >
+                            End Meeting
+                        </button>
+                    </div>
                     
                     {showReminder && (
-                        <div className="reminder-message">
+                        <div className="reminder-message" style={{ zIndex: 2, position: 'relative' }}>
                             ⏳ Wrap-up time! Summarize action points and closing notes.
                         </div>
                     )}
