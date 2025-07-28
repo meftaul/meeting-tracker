@@ -22,9 +22,7 @@
 
         body {
             font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
 
@@ -53,18 +51,18 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 3rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
             text-align: center;
-            max-width: 400px;
-            width: 100%;
+            max-width: 600px;
+            width: 90%;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .setup-title {
             color: #333;
-            font-size: 2rem;
-            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            margin-bottom: 2.5rem;
             font-weight: 600;
         }
 
@@ -87,18 +85,111 @@
             background: #4CAF50;
             color: white;
             border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
+            padding: 1.2rem 2rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             width: 100%;
+            margin-top: 0.5rem;
         }
 
         .start-button:hover {
             background: #45a049;
             transform: translateY(-2px);
+        }
+
+        .theme-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: #333;
+            border: 2px solid #ddd;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.25rem;
+        }
+
+        .theme-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .theme-button.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .theme-selector {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .preset-button {
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            border: none;
+            padding: 1.2rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .preset-button:hover {
+            background: rgba(76, 175, 80, 1);
+            transform: translateY(-1px);
+        }
+
+        .preset-button.selected {
+            background: #2E7D32;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .custom-input-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .custom-input {
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: #4CAF50;
         }
 
         .timer-screen {
@@ -127,6 +218,28 @@
             line-height: 0.9;
             text-align: center;
             font-family: 'Fredoka', sans-serif;
+            animation: timerPulse 2s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { 
+                transform: scale(1);
+            }
+            50% { 
+                transform: scale(1.02);
+            }
+        }
+
+        .timer-bounce {
+            animation: bounceEffect 0.6s ease-out;
+        }
+
+        @keyframes bounceEffect {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.1); }
+            60% { transform: scale(0.95); }
+            100% { transform: scale(1); }
         }
 
         .extend-button {
@@ -198,6 +311,23 @@
             .setup-container {
                 padding: 2rem;
                 margin: 1rem;
+                width: 95%;
+            }
+
+            .setup-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .preset-buttons {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
+                gap: 0.8rem;
+            }
+
+            .preset-button {
+                min-height: 70px;
+                padding: 1rem;
             }
 
             .button-container {
@@ -216,11 +346,44 @@
                 font-size: 40vw;
                 margin-bottom: 1rem;
             }
+
+            .setup-container {
+                padding: 1.5rem;
+                width: 98%;
+            }
+
+            .setup-title {
+                font-size: 1.8rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .custom-input-container {
+                padding: 0;
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .custom-input {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .preset-buttons {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
         }
 
         @media (min-width: 1400px) {
             .timer-display {
                 font-size: 25vw;
+            }
+
+            .setup-container {
+                max-width: 700px;
             }
         }
     </style>
@@ -234,11 +397,97 @@
             const [isInMeeting, setIsInMeeting] = React.useState(false);
             const [timeRemaining, setTimeRemaining] = React.useState(0);
             const [showReminder, setShowReminder] = React.useState(false);
+            const [bounceTimer, setBounceTimer] = React.useState(false);
+            const [currentTheme, setCurrentTheme] = React.useState(0);
+            const [motivationalMessage, setMotivationalMessage] = React.useState('');
+            const [selectedPreset, setSelectedPreset] = React.useState(null);
+            const [customDuration, setCustomDuration] = React.useState('');
             const intervalRef = React.useRef(null);
             const lastTingTimeRef = React.useRef(null);
             const audioContextRef = React.useRef(null);
 
-            const createTingSound = () => {
+            const themes = [
+                {
+                    name: "Slate",
+                    setup: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    timer: "linear-gradient(135deg, #4c63d2 0%, #5a67d8 100%)"
+                },
+                {
+                    name: "Ocean",
+                    setup: "linear-gradient(135deg, #74b9ff 0%, #0984e3 100%)",
+                    timer: "linear-gradient(135deg, #3742fa 0%, #2f3542 100%)"
+                },
+                {
+                    name: "Rose",
+                    setup: "linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%)",
+                    timer: "linear-gradient(135deg, #e84393 0%, #fd79a8 100%)"
+                },
+                {
+                    name: "Mint",
+                    setup: "linear-gradient(135deg, #55efc4 0%, #81ecec 100%)",
+                    timer: "linear-gradient(135deg, #00b894 0%, #00cec9 100%)"
+                }
+            ];
+
+            const presets = [
+                { name: 'Quick Chat', duration: 15, emoji: '💬' },
+                { name: 'Team Sync', duration: 30, emoji: '👥' },
+                { name: 'Deep Dive', duration: 60, emoji: '🔍' },
+                { name: 'Power Hour', duration: 90, emoji: '⚡' }
+            ];
+
+            const motivationalMessages = {
+                start: [
+                    "Let's make this productive! 🚀",
+                    "Time to focus and get things done! 💪",
+                    "Ready to rock this meeting! ⭐",
+                    "Great minds think efficiently! 🧠"
+                ],
+                middle: [
+                    "You're doing great! Keep it up! 👍",
+                    "Halfway there! Stay focused! 🎯",
+                    "Progress is being made! 📈",
+                    "Excellent discussions so far! 💫"
+                ],
+                warning: [
+                    "Wrap-up time! Let's summarize! ⏰",
+                    "Final stretch! Action items needed! 📝",
+                    "Time to conclude effectively! 🎉",
+                    "Last chance to finalize decisions! ✅"
+                ],
+                extend: [
+                    "More time unlocked! Use it wisely! ⏳",
+                    "Extra minutes for great ideas! 💡",
+                    "Bonus time - make it count! 🌟",
+                    "Extended for excellence! 🎊"
+                ],
+                celebration: [
+                    "Meeting finished early! Well done! 🎉",
+                    "Efficient meeting! Time well spent! ⭐",
+                    "Great job staying on track! 👏",
+                    "Productivity champion! 🏆"
+                ]
+            };
+
+            const getRandomMessage = (phase) => {
+                const messages = motivationalMessages[phase] || [];
+                return messages[Math.floor(Math.random() * messages.length)];
+            };
+
+            const handlePresetSelect = (preset) => {
+                setSelectedPreset(preset);
+                setDuration(preset.duration);
+                setCustomDuration('');
+            };
+
+            const handleCustomDurationChange = (value) => {
+                setCustomDuration(value);
+                const numValue = Math.max(1, parseInt(value) || 1);
+                setDuration(numValue);
+                setSelectedPreset(null);
+            };
+
+            const createSound = (type = 'bell') => {
                 try {
                     if (!audioContextRef.current) {
                         audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
@@ -251,16 +500,45 @@
                     oscillator.connect(gainNode);
                     gainNode.connect(audioContext.destination);
                     
-                    // Create a gentle bell-like sound
-                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.3);
-                    
-                    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                    gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.8);
-                    
-                    oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.8);
+                    if (type === 'bell') {
+                        // Gentle bell-like sound
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.3);
+                        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.01);
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.8);
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.8);
+                    } else if (type === 'chime') {
+                        // Higher pitched chime
+                        oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.4);
+                        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.01);
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.6);
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.6);
+                    } else if (type === 'celebration') {
+                        // Uplifting celebratory sound
+                        oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+                        oscillator.frequency.linearRampToValueAtTime(880, audioContext.currentTime + 0.2);
+                        oscillator.frequency.linearRampToValueAtTime(1100, audioContext.currentTime + 0.4);
+                        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.01);
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.6);
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.6);
+                    } else if (type === 'warning') {
+                        // Urgent warning beep
+                        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                        gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.01);
+                        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.15);
+                        gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.2);
+                        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.35);
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.4);
+                    }
                 } catch (error) {
                     console.log('Audio not supported or blocked by browser');
                 }
@@ -271,17 +549,24 @@
                 setTimeRemaining(totalSeconds);
                 setIsInMeeting(true);
                 lastTingTimeRef.current = totalSeconds;
+                setMotivationalMessage(getRandomMessage('start'));
+                setTimeout(() => setMotivationalMessage(''), 4000);
             };
 
             const endMeeting = () => {
                 setIsInMeeting(false);
                 setShowReminder(false);
                 setTimeRemaining(0);
+                setMotivationalMessage('');
             };
 
             const extendTime = () => {
                 setTimeRemaining(prev => prev + 300);
                 setShowReminder(false);
+                setBounceTimer(true);
+                setTimeout(() => setBounceTimer(false), 600);
+                setMotivationalMessage(getRandomMessage('extend'));
+                setTimeout(() => setMotivationalMessage(''), 4000);
             };
 
             const formatTime = (seconds) => {
@@ -323,8 +608,10 @@
                             
                             // Check if 5 minutes have passed since last ting
                             if (lastTingTimeRef.current - prev >= 300) { // 300 seconds = 5 minutes
-                                createTingSound();
+                                createSound('chime');
                                 lastTingTimeRef.current = prev;
+                                setMotivationalMessage(getRandomMessage('middle'));
+                                setTimeout(() => setMotivationalMessage(''), 3000);
                             }
                             
                             // Calculate 90% threshold dynamically
@@ -333,6 +620,13 @@
                             
                             if (prev <= warningThreshold && !showReminder) {
                                 setShowReminder(true);
+                                createSound('warning');
+                                setMotivationalMessage(getRandomMessage('warning'));
+                            }
+                            
+                            // Final minute warning
+                            if (prev === 60) {
+                                createSound('warning');
                             }
                             
                             return prev - 1;
@@ -351,22 +645,51 @@
 
             if (!isInMeeting) {
                 return (
-                    <div className="meeting-setup">
+                    <div className="meeting-setup" style={{ background: themes[currentTheme].setup }}>
                         <div className="setup-container">
                             <h1 className="setup-title">Meeting Time Tracker</h1>
-                            <input
-                                type="number"
-                                className="duration-input"
-                                value={duration}
-                                onChange={(e) => setDuration(Math.max(1, parseInt(e.target.value) || 1))}
-                                placeholder="Meeting duration (minutes)"
-                                min="1"
-                            />
+                            <div className="theme-selector">
+                                {themes.map((theme, index) => (
+                                    <button
+                                        key={index}
+                                        className={`theme-button ${currentTheme === index ? 'active' : ''}`}
+                                        onClick={() => setCurrentTheme(index)}
+                                    >
+                                        {theme.name}
+                                    </button>
+                                ))}
+                            </div>
+                            
+                            <div className="preset-buttons">
+                                {presets.map((preset, index) => (
+                                    <button
+                                        key={index}
+                                        className={`preset-button ${selectedPreset === preset ? 'selected' : ''}`}
+                                        onClick={() => handlePresetSelect(preset)}
+                                    >
+                                        {preset.emoji} {preset.name}<br/>
+                                        <small>{preset.duration} min</small>
+                                    </button>
+                                ))}
+                            </div>
+                            
+                            <div className="custom-input-container">
+                                <span style={{ fontSize: '0.9rem', color: '#666' }}>Custom:</span>
+                                <input
+                                    type="number"
+                                    className="custom-input"
+                                    value={customDuration}
+                                    onChange={(e) => handleCustomDurationChange(e.target.value)}
+                                    placeholder="Minutes"
+                                    min="1"
+                                />
+                            </div>
+                            
                             <button 
                                 className="start-button"
                                 onClick={startMeeting}
                             >
-                                Enter Meeting
+                                Enter Meeting ({duration} min)
                             </button>
                         </div>
                     </div>
@@ -376,6 +699,7 @@
             return (
                 <div 
                     className={`timer-screen ${timeRemaining <= (duration * 60 * 0.1) ? 'blinking' : ''}`}
+                    style={{ background: themes[currentTheme].timer }}
                 >
                     <div 
                         style={{
@@ -390,7 +714,7 @@
                         }}
                     ></div>
                     
-                    <div className="timer-display" style={{ zIndex: 2, position: 'relative' }}>
+                    <div className={`timer-display ${bounceTimer ? 'timer-bounce' : ''}`} style={{ zIndex: 2, position: 'relative' }}>
                         {formatTime(timeRemaining)}
                     </div>
                     
@@ -413,6 +737,12 @@
                     {showReminder && (
                         <div className="reminder-message" style={{ zIndex: 2, position: 'relative' }}>
                             ⏳ Wrap-up time! Summarize action points and closing notes.
+                        </div>
+                    )}
+                    
+                    {motivationalMessage && (
+                        <div className="reminder-message" style={{ zIndex: 2, position: 'relative', marginTop: '1rem', background: 'rgba(255, 255, 255, 0.95)' }}>
+                            {motivationalMessage}
                         </div>
                     )}
                 </div>
